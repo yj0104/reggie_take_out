@@ -38,8 +38,8 @@
 3. 新增员工功能;
 4. 全局异常处理器,拦截异常;  
  4.1 SQLIntegrityConstraintViolationException;
-5. 启用/禁用员工账号;
- 5.1. 提供对象转换器JacksonObjectMapper，基于Jackson进行Java对象到json数据的转换;
- 5.2. 在WebMvcConfig配置类中扩展Spring mvc的消息转换器，在此消息转换器中使用提供的对象转换器进行Java对象到json数据的转换;
-6. 编辑员工信息;
+5. 启用/禁用员工账号;  
+ 5.1. 提供对象转换器JacksonObjectMapper，基于Jackson进行Java对象到json数据的转换;  
+ 5.2. 在WebMvcConfig配置类中扩展Spring mvc的消息转换器，在此消息转换器中使用提供的对象转换器进行Java对象到json数据的转换;  
+6. 编辑员工信息;  
  6.1. 根据id查询用户信息;
