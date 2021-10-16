@@ -17,6 +17,7 @@ public class Employee implements Serializable {
 
     private String name;
 
+    @TableField(fill = FieldFill.INSERT)
     private String password;
 
     private String phone;
@@ -27,8 +28,12 @@ public class Employee implements Serializable {
 
     private Integer status;
 
+    //表示在插入时填充该属性值
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
+    //表示插入/更新时填充该属性值
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableField(fill = FieldFill.INSERT)

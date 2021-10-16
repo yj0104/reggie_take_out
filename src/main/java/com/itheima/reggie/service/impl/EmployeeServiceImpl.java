@@ -76,6 +76,12 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         request.getSession().invalidate();
     }
 
+    /**
+     * 新增加用户
+     * @param request
+     * @param employee
+     * @return
+     */
     @Override
     public R<String> insert(HttpServletRequest request, Employee employee) {
         //输出日志信息
@@ -85,7 +91,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         String s = DigestUtils.md5DigestAsHex("123456".getBytes());
         employee.setPassword(s);
 
-        //设置创建和更新的调用人
+        //设置创建和更新的时间
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
 
@@ -96,12 +102,17 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         employee.setCreateUser(empId);
         employee.setUpdateUser(empId);
 
-        employeeMapper.insert(employee);
+        //调用MP提供的增加SQL
+        int insert = employeeMapper.insert(employee);
+        //通过SQL返回的影响行数,判断是否添加成功
+        if (insert == 0){
+            return R.error("创建失败");
+        }
         return R.success("创建成功");
     }
 
     /**
-     *
+     *分页查询
      * @param name 员工姓名-可选参数
      * @param page  当前查询页码
      * @param pageSize  每页显示长度
