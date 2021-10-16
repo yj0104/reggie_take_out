@@ -36,7 +36,7 @@
 1. 拦截器,防止用户未登录直接访问管理页面;
 2. 登陆后,员工管理页面展示员工数据:分页查询;
 3. 新增员工功能;
-4. 全局异常处理器,拦截异常;
+4. 全局异常处理器,拦截异常;  
  4.1 SQLIntegrityConstraintViolationException;
 5. 启用/禁用员工账号;
  5.1. 提供对象转换器JacksonObjectMapper，基于Jackson进行Java对象到json数据的转换;
