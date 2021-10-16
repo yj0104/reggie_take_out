@@ -6,18 +6,20 @@ package com.itheima.reggie.service.impl;
  */
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.entity.Employee;
 import com.itheima.reggie.mapper.EmployeeMapper;
 import com.itheima.reggie.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 @Service
@@ -96,5 +98,54 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         employeeMapper.insert(employee);
         return R.success("创建成功");
+    }
+
+    /**
+     *
+     * @param name 员工姓名-可选参数
+     * @param page  当前查询页码
+     * @param pageSize  每页显示长度
+     * @return
+     */
+    @Override
+    public R<IPage<Employee>> ifndPageAndName(String name, int page, int pageSize) {
+        //MyBatisPlus提供的分页查询工具类
+        IPage<Employee> p = new Page<>(page,pageSize);
+        LambdaQueryWrapper<Employee> lqw = new LambdaQueryWrapper<>();
+        // select * from employee where name like "%xx%"
+        // 当传递name不为null&&不为空字符串&&不为空格;
+        lqw.like(StringUtils.isNotBlank(name),Employee::getName,name);
+        employeeMapper.selectPage(p,lqw);
+        return R.success(p);
+    }
+
+    /**
+     * 修改员工状态
+     * @param request
+     * @param employee
+     * @return
+     */
+    @Override
+    public int update(HttpServletRequest request, Employee employee) {
+        //将前端传过来的id数据进行转换,id里存的是操作人的id;
+        Long emppId = (Long) request.getSession().getAttribute("userInfo");
+        //设置修改词条的时间以及人员
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(emppId);
+        int i = employeeMapper.updateById(employee);
+        return i;
+    }
+
+
+    /**
+     * 根据id查询用户
+     * @param id;定位查询
+     * @return
+     */
+    @Override
+    public R<Employee> selectById(Long id) {
+        log.info("根据id查询用户"+id);
+        Employee employee = employeeMapper.selectById(id);
+        return R.success(employee);
     }
 }
