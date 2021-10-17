@@ -7,8 +7,9 @@
 三层架构
 
 
-###10月17日敲得代码
-####优化
+### 10月17日敲得代码
+
+### 优化
 1. 公共字段自动填充
    - 实现步骤
    1. 在实体类的属性上加入@TableField注解，指定自动填充的策略。
@@ -20,7 +21,7 @@
    2. 在LoginCheckFilter的doFilter方法中调用BaseContext来设置当前登录用户的id
    3. 在MyMetaObjectHandler的方法中调用BaseContext获取登录用户的id
    
-####新增
+### 新增
 1. 分类管理页面的'新增菜品分类'和'新增套餐分类'
    1. 实体类Category
    2. Mapper接口CategoryMapper
