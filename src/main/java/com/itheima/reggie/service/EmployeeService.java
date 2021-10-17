@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author amass_
  * @date 2021/10/14
  */
-@Service
 public interface EmployeeService extends IService<Employee> {
     /**
      *登录
@@ -32,7 +31,7 @@ public interface EmployeeService extends IService<Employee> {
      * @param request
      * @param employee
      */
-    R<String> insert(HttpServletRequest request, Employee employee);
+    void insert(HttpServletRequest request, Employee employee);
 
     /**
      * 分页查询
@@ -49,7 +48,7 @@ public interface EmployeeService extends IService<Employee> {
      * @param employee
      * @return
      */
-    int update(HttpServletRequest request, Employee employee);
+    void update(HttpServletRequest request, Employee employee);
 
     /**
      * 根据id查询用户

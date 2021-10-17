@@ -17,7 +17,6 @@ public class Employee implements Serializable {
 
     private String name;
 
-    @TableField(fill = FieldFill.INSERT)
     private String password;
 
     private String phone;

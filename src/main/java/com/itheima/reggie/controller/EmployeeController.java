@@ -34,6 +34,14 @@ public class EmployeeController {
     @PostMapping("/login")
     public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
         R<Employee> result = employeeService.login(employee);
+        /**
+         * 被ThreadLocal代替
+         *         if (result.getCode() == 1) {
+         *             //如果登录成功，则在session中保存登陆状态
+         *             request.getSession().setAttribute("userInfo", result.getData().getId());
+         *         }
+         */
+
         if (result.getCode() == 1) {
             //如果登录成功，则在session中保存登陆状态
             request.getSession().setAttribute("userInfo", result.getData().getId());
@@ -55,14 +63,15 @@ public class EmployeeController {
 
     /**
      * 新增用户
+     *
      * @param request;客户端的请求都会封装在这个对象中
      * @param employee;接收前端传递给后端的json字符串中的数据的(请求体中的数据的)；
      * @return
      */
     @PostMapping
     public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
-        R<String> insert = employeeService.insert(request, employee);
-        return insert;
+        employeeService.insert(request, employee);
+        return R.success("增加用户成功");
     }
 
     /**
@@ -89,11 +98,8 @@ public class EmployeeController {
     public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
         //日志信息打印
         log.info(employee.toString());
-        //无聊地发泄balabalabala;
-        int update = employeeService.update(request, employee);
-        if (update == 0) {
-            return R.error("员工信息修改失败");
-        }
+        //SQL返回了影响行数,根据返回值判断;
+        employeeService.update(request, employee);
         return R.success("员工信息修改成功");
     }
 

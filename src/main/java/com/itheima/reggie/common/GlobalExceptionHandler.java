@@ -40,4 +40,12 @@ public class GlobalExceptionHandler {
         }
         return R.error("未知错误");
     }
+
+    @ExceptionHandler(CustomException.class)
+    public R<String> exceptionHandler(CustomException cx){
+        //将错误信息输出到控制台
+        log.error(cx.getMessage());
+        //将错误信息传递给前端
+        return R.error(cx.getMessage());
+    }
 }
