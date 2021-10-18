@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 
 @Service
 @Slf4j
@@ -128,7 +127,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         // select * from employee where name like "%xx%"
         // 当传递name不为null&&不为空字符串&&不为空格;
         lqw.like(StringUtils.isNotBlank(name), Employee::getName, name);
-        employeeMapper.selectPage(p, lqw);
+        p = employeeMapper.selectPage(p, lqw);
         return R.success(p);
     }
 

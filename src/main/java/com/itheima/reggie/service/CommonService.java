@@ -1,5 +1,6 @@
 package com.itheima.reggie.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.reggie.common.R;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author amass_
  * @date 2021/10/17
  */
-public interface CommonService {
+public interface CommonService  {
     /**
      * 上传图片
      * @param file

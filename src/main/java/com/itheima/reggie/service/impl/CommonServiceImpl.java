@@ -1,9 +1,7 @@
 package com.itheima.reggie.service.impl;
 
 import com.itheima.reggie.common.R;
-import com.itheima.reggie.service.CategoryService;
 import com.itheima.reggie.service.CommonService;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,13 +11,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
 /**
  * @author amass_
  * @date 2021/10/17
+ *
+ * 通用管理类
  */
 @Service
 @Slf4j

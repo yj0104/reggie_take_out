@@ -17,9 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author amass_
  * @date 2021/10/17
+ *
+ * 分类管理
  */
 @Service
 @Slf4j
@@ -74,7 +78,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
      * @return
      */
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         //打印日志
         log.info("要删除的id是:" + id);
 
@@ -98,5 +102,22 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         categoryMapper.deleteById(id);
         //日志提示
         log.info("删除成功",id);
+    }
+
+    /**
+     * 根据条件查询分类数据
+     * @param category
+     * @return
+     */
+    @Override
+    public List<Category> termAndSortSelect(Category category) {
+        //条件构造器
+        LambdaQueryWrapper<Category> lqw = new LambdaQueryWrapper<>();
+        //添加条件
+        lqw.eq(category.getType() != null,Category::getType,category.getType());
+        //添加排序条件
+        lqw.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
+        List<Category> list = categoryMapper.selectList(lqw);
+        return list;
     }
 }

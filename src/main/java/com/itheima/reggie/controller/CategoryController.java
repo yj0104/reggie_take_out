@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 分类管理
  */
@@ -64,10 +66,27 @@ public class CategoryController {
         return R.success("修改成功");
     }
 
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
     @DeleteMapping
-    public R<String> delete(Long id) {
-        categoryService.delete(id);
+    public R<String> deleteById(Long id) {
+        categoryService.deleteById(id);
 
         return R.success("分类信息删除成功");
     }
+
+    /**
+     * 根据条件查询分类数据
+     * @param category
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<Category>> termAndSortSelect(Category category){
+        List<Category> list = categoryService.termAndSortSelect(category);
+        return R.success(list);
+    }
+
 }

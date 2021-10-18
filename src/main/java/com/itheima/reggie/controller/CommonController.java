@@ -19,6 +19,7 @@ import java.util.UUID;
 /**
  * @author amass_
  * @date 2021/10/17
+ * 通用控制类
  */
 @Slf4j
 @RestController
@@ -28,15 +29,25 @@ public class CommonController {
     @Autowired
     private CommonService commonService;
 
+    /**
+     * 文件的上传
+     * @param file
+     * @return
+     */
     @PostMapping("/upload")
     public R<String> upload(MultipartFile file) {
 
         R<String> fileName = commonService.upload(file);
 
-        //考虑到前端可能会用到文件名,将文件名传递回去
+        //将文件名传递回去
         return fileName;
     }
 
+    /**
+     * 文件的下载
+     * @param name
+     * @param response
+     */
     @GetMapping("/download")
     public void download(String name, HttpServletResponse response){
         commonService.download(name,response);
