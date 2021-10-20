@@ -33,6 +33,8 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     private DishFlavorService dishFlavorService;
 
     @Autowired
+    private DishMapper dishMapper;
+    @Autowired
     private DishFlavorMapper dishFlavorMapper;
 
     @Autowired
@@ -147,5 +149,25 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         }
         //保存菜品口味数据到菜品口味表dish_flavor
         dishFlavorService.saveBatch(flavors);
+    }
+
+    /**
+     * 根据条件查询对应的菜品数据
+     * @param dish
+     * @return
+     */
+    @Override
+    public R<List<Dish>> list(Dish dish) {
+        //构造查询条件
+        LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(dish.getCategoryId()!=null,Dish::getCategoryId,dish.getCategoryId());
+        //添加条件,查询状态为1(起售状态的菜品)
+        lqw.eq(Dish::getStatus,1);
+        //添加排序条件
+        lqw.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+
+        List<Dish> list = dishMapper.selectList(lqw);
+
+        return R.success(list);
     }
 }

@@ -6,6 +6,8 @@ import com.itheima.reggie.common.R;
 import com.itheima.reggie.dto.DishDto;
 import com.itheima.reggie.entity.Dish;
 
+import java.util.List;
+
 /**
  * @author amass_
  * @date 2021/10/17
@@ -35,4 +37,11 @@ public interface DishService extends IService<Dish> {
      * 修改菜品以及口味信息
      */
     void updateWithFlavor(DishDto dishDto);
+
+    /**
+     * 根据条件查询对应的菜品数据
+     * @param dish
+     * @return
+     */
+    R<List<Dish>> list(Dish dish);
 }
