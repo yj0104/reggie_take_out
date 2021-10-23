@@ -3,6 +3,7 @@ package com.itheima.reggie.common;
 /**
  * @author amass_
  * @date 2021/10/17
+ * 每个线程的局部变量
  */
 public class BaseContext {
 

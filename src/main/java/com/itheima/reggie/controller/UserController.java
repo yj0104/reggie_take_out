@@ -48,4 +48,15 @@ public class UserController {
         R<User> login = userService.login(map, session);
         return login;
     }
+
+    /**
+     * 用户退出
+     * @param session
+     * @return
+     */
+    @PostMapping("/loginout")
+    public R<String> loginout(HttpSession session){
+        session.setAttribute("user",null);
+        return R.success("推出成功");
+    }
 }

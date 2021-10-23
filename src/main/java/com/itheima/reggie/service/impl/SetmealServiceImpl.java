@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.common.CustomException;
 import com.itheima.reggie.dto.SetmealDto;
 import com.itheima.reggie.entity.Category;
+import com.itheima.reggie.entity.Dish;
 import com.itheima.reggie.entity.Setmeal;
 import com.itheima.reggie.entity.SetmealDish;
 import com.itheima.reggie.mapper.CategoryMapper;
+import com.itheima.reggie.mapper.DishMapper;
 import com.itheima.reggie.mapper.SetmealDishMapper;
 import com.itheima.reggie.mapper.SetmealMapper;
 import com.itheima.reggie.service.SetmealService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +28,14 @@ import java.util.stream.Collectors;
  * @date 2021/10/17
  */
 @Service
+@Slf4j
 public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> implements SetmealService {
 
     @Autowired
     private SetmealMapper setmealMapper;
 
+    @Autowired
+    private DishMapper dishMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
 
@@ -61,8 +67,6 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     /**
      * 分页查询
-     *
-     * @return
      */
     @Override
     public Page page(int page, int pageSize, String name) {
@@ -103,8 +107,6 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     /**
      * 删除套餐，同时需要删除套餐和菜品的关联数据
-     *
-     * @param ids
      */
     @Override
     @Transactional
@@ -129,4 +131,79 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         setmealDishMapper.delete(lqw);
     }
 
+    /**
+     * 根据Id查询
+     */
+    @Override
+    public List<Setmeal> setmealList(Setmeal setmeal) {
+        //根据id查询,排除Status为0的数据,查询结果用更新时间排序
+        Long categoryId = setmeal.getCategoryId();
+        LambdaQueryWrapper<Setmeal> setmealLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        setmealLambdaQueryWrapper.eq(Setmeal::getCategoryId, categoryId);
+        setmealLambdaQueryWrapper.eq(Setmeal::getStatus, 1);
+        setmealLambdaQueryWrapper.orderByDesc(Setmeal::getUpdateTime);
+        List<Setmeal> setmeals = setmealMapper.selectList(setmealLambdaQueryWrapper);
+        return setmeals;
+    }
+
+    /**
+     * 查询套餐详细菜品
+     */
+    @Override
+    public List<SetmealDish> getSetmealDish(Long id) {
+        //查询SetmealDish表
+        LambdaQueryWrapper<SetmealDish> setmealDishLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        setmealDishLambdaQueryWrapper.eq(SetmealDish::getSetmealId, id);
+        List<SetmealDish> setmealDishes = setmealDishMapper.selectList(setmealDishLambdaQueryWrapper);
+        //获取Dish表的id,查询对应图片
+        List<SetmealDish> collect = setmealDishes.stream().map(item -> {
+            Dish dish = dishMapper.selectById(item.getDishId());
+            item.setImage(dish.getImage());
+            return item;
+        }).collect(Collectors.toList());
+
+        log.info(collect.toString());
+        return collect;
+    }
+
+    /**
+     * 批量修改停售起售
+     */
+    @Override
+    public void setmealUpdatestatus(Long[] ids, int i) {
+        Setmeal setmeal = new Setmeal();
+        for (Long id : ids) {
+            setmeal.setId(id);
+            setmeal.setStatus(i);
+            setmealMapper.updateById(setmeal);
+        }
+    }
+
+
+    /**
+     * 根据id查询
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public SetmealDto getSetmeal(Long id) {
+        SetmealDto setmealDto = new SetmealDto();
+        //设置setmeal数据
+        Setmeal setmeal = setmealMapper.selectById(id);
+        BeanUtils.copyProperties(setmeal, setmealDto);
+        //设置setmealDish
+        LambdaQueryWrapper<SetmealDish> setmealDishLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        setmealDishLambdaQueryWrapper.eq(SetmealDish::getSetmealId, id);
+        List<SetmealDish> setmealDish = setmealDishMapper.selectList(setmealDishLambdaQueryWrapper);
+        setmealDto.setSetmealDishes(setmealDish);
+        //设置categoryName
+        Long categoryId = setmeal.getCategoryId();
+        LambdaQueryWrapper<Category> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Category::getId, categoryId);
+        Category category = categoryMapper.selectOne(lambdaQueryWrapper);
+        String name = category.getName();
+        setmealDto.setCategoryName(name);
+        return setmealDto;
+    }
 }

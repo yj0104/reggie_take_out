@@ -43,5 +43,18 @@ public interface DishService extends IService<Dish> {
      * @param dish
      * @return
      */
-    R<List<Dish>> list(Dish dish);
+    R<List<DishDto>> list(Dish dish);
+
+    /**
+     * 根据id删除
+     * @param ids
+     */
+    void dishDelete(Long[] ids);
+
+    /**
+     * 批量修改停售起售状态
+     * @param ids
+     * @param i
+     */
+    void dishStatus(Long[] ids, int i);
 }

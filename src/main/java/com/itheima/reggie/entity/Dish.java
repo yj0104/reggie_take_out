@@ -50,6 +50,8 @@ public class Dish implements Serializable {
     //顺序
     private Integer sort;
 
+    @TableField(exist = false)
+    private Integer copies;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;

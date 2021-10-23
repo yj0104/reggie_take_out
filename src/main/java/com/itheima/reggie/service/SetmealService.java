@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.reggie.dto.SetmealDto;
 import com.itheima.reggie.entity.Setmeal;
+import com.itheima.reggie.entity.SetmealDish;
 
 import java.util.List;
 
@@ -30,4 +31,34 @@ public interface SetmealService extends IService<Setmeal> {
      * @param ids
      */
     void removeWithDish(List<Long> ids);
+
+    /**
+     * 条件查询
+     *
+     * @param setmeal
+     * @return
+     */
+    List<Setmeal> setmealList(Setmeal setmeal);
+
+    /**
+     * 查询套餐详细菜品
+     * @param id
+     * @return
+     */
+    List<SetmealDish> getSetmealDish(Long id);
+
+
+    /**
+     * 批量修改停售起售
+     * @param ids
+     * @param i
+     */
+    void setmealUpdatestatus(Long[] ids, int i);
+
+
+    /**
+     * 根据id查询
+     * @param id
+     */
+    SetmealDto getSetmeal(Long id);
 }

@@ -40,12 +40,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isNotBlank(phone)) {
             //生成随机的4位验证码
             String code = ValidateCodeUtils.generateValidateCode(4).toString();
-            log.info("code={}", code);
+            log.info("code={}", code,"phone={}",phone);
             //调用阿里云提供的短信服务API完成发送短信
             //SMSUtils.sendMessage("瑞吉外卖","",phone,code);
             //需要将生成的验证码保存到Session
             session.setAttribute(phone, code);
-            return R.success("手机验证码短信发送成功");
+            return R.success(code);
         }
         return R.error("短信发送失败");
     }
@@ -80,7 +80,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 user.setStatus(1);
                 userMapper.insert(user);
             }
-            session.setAttribute("userInfo",user.getId());
+            session.setAttribute("user",user.getId());
             return R.success(user);
         }
         return R.error("登录失败");
